@@ -3,6 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/corda-training-solutions.iml" filepath="$PROJECT_DIR$/.idea/modules/corda-training-solutions.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/clients/corda-training-solutions.clients.iml" filepath="$PROJECT_DIR$/.idea/modules/clients/corda-training-solutions.clients.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/clients/corda-training-solutions.clients.main.iml" filepath="$PROJECT_DIR$/.idea/modules/clients/corda-training-solutions.clients.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/clients/corda-training-solutions.clients.test.iml" filepath="$PROJECT_DIR$/.idea/modules/clients/corda-training-solutions.clients.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/java-source/corda-training-solutions.java-source.iml" filepath="$PROJECT_DIR$/.idea/modules/java-source/corda-training-solutions.java-source.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/java-source/corda-training-solutions.java-source.main.iml" filepath="$PROJECT_DIR$/.idea/modules/java-source/corda-training-solutions.java-source.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/java-source/corda-training-solutions.java-source.test.iml" filepath="$PROJECT_DIR$/.idea/modules/java-source/corda-training-solutions.java-source.test.iml" />

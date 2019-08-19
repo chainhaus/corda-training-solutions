@@ -248,19 +248,6 @@
       </library>
     </orderEntry>
     <orderEntry type="library" name="Gradle: org.jetbrains.kotlinx:kotlinx-html-jvm:0.6.3" level="project" />
-    <orderEntry type="module-library">
-      <library name="Gradle: com.fasterxml.jackson.module:jackson-module-kotlin:2.9.5">
-        <CLASSES>
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.module/jackson-module-kotlin/2.9.5/3e73e80ff0285a776954252f61c22e4059ee5267/jackson-module-kotlin-2.9.5.jar!/" />
-        </CLASSES>
-        <JAVADOC>
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.module/jackson-module-kotlin/2.9.5/9a51915fa5502acadb69ad5c90cb7180d0ea7f0c/jackson-module-kotlin-2.9.5-javadoc.jar!/" />
-        </JAVADOC>
-        <SOURCES>
-          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.module/jackson-module-kotlin/2.9.5/e6185878f9870d64b1de64f2d328467a49a02ec1/jackson-module-kotlin-2.9.5-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
     <orderEntry type="module-library" scope="RUNTIME">
       <library name="Gradle: net.corda:corda:4.0">
         <CLASSES>
@@ -271,6 +258,19 @@
         </JAVADOC>
         <SOURCES>
           <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/net.corda/corda/4.0/ea624d694bc06960c565d6834c44f16c171f5c35/corda-4.0-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="Gradle: com.fasterxml.jackson.module:jackson-module-kotlin:2.9.5">
+        <CLASSES>
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.module/jackson-module-kotlin/2.9.5/3e73e80ff0285a776954252f61c22e4059ee5267/jackson-module-kotlin-2.9.5.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.module/jackson-module-kotlin/2.9.5/9a51915fa5502acadb69ad5c90cb7180d0ea7f0c/jackson-module-kotlin-2.9.5-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.module/jackson-module-kotlin/2.9.5/e6185878f9870d64b1de64f2d328467a49a02ec1/jackson-module-kotlin-2.9.5-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
