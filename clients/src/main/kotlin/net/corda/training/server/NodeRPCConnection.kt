@@ -1,4 +1,4 @@
-package com.example.server
+package net.corda.training.server
 
 import net.corda.client.rpc.CordaRPCClient
 import net.corda.client.rpc.CordaRPCConnection

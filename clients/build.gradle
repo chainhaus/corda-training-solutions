@@ -63,20 +63,20 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
 
 task runPartyAServer(type: JavaExec, dependsOn: jar) {
     classpath = sourceSets.main.runtimeClasspath
-    main = 'com.example.server.ServerKt'
-    args '--server.port=8080', '--config.rpc.host=localhost', '--config.rpc.port=10008', '--config.rpc.username=user1', '--config.rpc.password=password'
+    main = 'net.corda.training.server.ServerKt'
+    args '--server.port=10009', '--config.rpc.host=localhost', '--config.rpc.port=10008', '--config.rpc.username=user1', '--config.rpc.password=password'
 }
 
 task runPartyBServer(type: JavaExec, dependsOn: jar) {
     classpath = sourceSets.main.runtimeClasspath
-    main = 'com.example.server.ServerKt'
-    args '--server.port=8081', '--config.rpc.host=localhost', '--config.rpc.port=10011', '--config.rpc.username=user1', '--config.rpc.password=password'
+    main = 'net.corda.training.server.ServerKt'
+    args '--server.port=10012', '--config.rpc.host=localhost', '--config.rpc.port=10011', '--config.rpc.username=user1', '--config.rpc.password=password'
 }
 
 task runPartyCServer(type: JavaExec, dependsOn: jar) {
     classpath = sourceSets.main.runtimeClasspath
-    main = 'com.example.server.ServerKt'
-    args '--server.port=8082', '--config.rpc.host=localhost', '--config.rpc.port=10014', '--config.rpc.username=user1', '--config.rpc.password=password'
+    main = 'net.corda.training.server.ServerKt'
+    args '--server.port=10015', '--config.rpc.host=localhost', '--config.rpc.port=10014', '--config.rpc.username=user1', '--config.rpc.password=password'
 }
 
 

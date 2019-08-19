@@ -1,8 +1,7 @@
-package com.example.server
+package net.corda.training.server
 
 import net.corda.core.contracts.Amount
 import net.corda.core.contracts.ContractState
-import net.corda.training.state.IOUState
 import net.corda.core.contracts.StateAndRef
 import net.corda.core.contracts.UniqueIdentifier
 import net.corda.core.identity.CordaX500Name
@@ -10,19 +9,22 @@ import net.corda.core.internal.toX500Name
 import net.corda.core.messaging.startFlow
 import net.corda.core.messaging.startTrackedFlow
 import net.corda.core.messaging.vaultQueryBy
-import org.slf4j.LoggerFactory
-import org.springframework.http.HttpStatus
-import org.springframework.http.MediaType.*
-import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
-import org.bouncycastle.asn1.x500.X500Name
-import org.bouncycastle.asn1.x500.style.BCStyle
 import net.corda.core.node.NodeInfo
 import net.corda.finance.contracts.asset.Cash
+import net.corda.finance.workflows.getCashBalances
 import net.corda.training.flow.IOUIssueFlow
 import net.corda.training.flow.IOUSettleFlow
 import net.corda.training.flow.IOUTransferFlow
 import net.corda.training.flow.SelfIssueCashFlow
+import net.corda.training.state.IOUState
+import org.bouncycastle.asn1.x500.X500Name
+import org.bouncycastle.asn1.x500.style.BCStyle
+import org.slf4j.LoggerFactory
+import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
+import org.springframework.http.MediaType.TEXT_PLAIN_VALUE
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.*
 import java.util.*
 
 
@@ -33,7 +35,7 @@ val SERVICE_NAMES = listOf("Notary", "Network Map Service")
  */
 
 @RestController
-@RequestMapping("/api/example/") // The paths for GET and POST requests are relative to this base path.
+@RequestMapping("/api/iou/") // The paths for GET and POST requests are relative to this base path.
 class MainController(rpc: NodeRPCConnection) {
 
     private val proxy = rpc.proxy
@@ -92,19 +94,19 @@ class MainController(rpc: NodeRPCConnection) {
     /**
      * Displays all cash states that exist in the node's vault.
      */
-//    @GetMapping(value = [ "cash-balances" ], produces = [ APPLICATION_JSON_VALUE ])
-//    // Display cash balances.
-//    fun getCashBalances() = rpcOps.getCashBalances()
+    @GetMapping(value = [ "cash-balances" ], produces = [ APPLICATION_JSON_VALUE ])
+    // Display cash balances.
+    fun getCashBalances() = proxy.getCashBalances()
 
     /**
      * Initiates a flow to agree an IOU between two parties.
      * Example request:
      * curl -X PUT 'http://localhost:10007/api/iou/issue-iou?amount=99&currency=GBP&party=O=ParticipantC,L=New%20York,C=US
      */
-    @PutMapping(value = [ "issue-iou" ], produces = [ TEXT_PLAIN_VALUE ], headers = [ "Content-Type=application/x-www-form-urlencoded" ])
+    @PutMapping(value = [ "issue-iou" ], produces = [ TEXT_PLAIN_VALUE ])
     fun issueIOU(@RequestParam(value = "amount") amount: Int,
                  @RequestParam(value = "currency") currency: String,
-                 @RequestParam(value = "party") party: String): ResponseEntity<Any> {
+                 @RequestParam(value = "party") party: String): ResponseEntity<String> {
         // Get party objects for myself and the counterparty.
         val me = proxy.nodeInfo().legalIdentities.first()
         val lender = proxy.wellKnownPartyFromX500Name(CordaX500Name.parse(party)) ?: throw IllegalArgumentException("Unknown party name.")
@@ -132,7 +134,7 @@ class MainController(rpc: NodeRPCConnection) {
      */
     @GetMapping(value = [ "transfer-iou" ])
     fun transferIOU(@RequestParam(value = "id") id: String,
-                    @RequestParam(value = "party") party: String): ResponseEntity<Any> {
+                    @RequestParam(value = "party") party: String): ResponseEntity<String> {
         val linearId = UniqueIdentifier.fromString(id)
         val newLender = proxy.wellKnownPartyFromX500Name(CordaX500Name.parse(party)) ?: throw IllegalArgumentException("Unknown party name.")
         return try {
@@ -152,7 +154,7 @@ class MainController(rpc: NodeRPCConnection) {
     @GetMapping(value = [ "settle-iou" ])
     fun settleIOU(@RequestParam(value = "id") id: String,
                   @RequestParam(value = "amount") amount: Int,
-                  @RequestParam(value = "currency") currency: String): ResponseEntity<Any> {
+                  @RequestParam(value = "currency") currency: String): ResponseEntity<String> {
         val linearId = UniqueIdentifier.fromString(id)
         val settleAmount = Amount(amount.toLong() * 100, Currency.getInstance(currency))
 
@@ -170,7 +172,7 @@ class MainController(rpc: NodeRPCConnection) {
      */
     @GetMapping(value = [ "self-issue-cash" ])
     fun selfIssueCash(@RequestParam(value = "amount") amount: Int,
-                      @RequestParam(value = "currency") currency: String): ResponseEntity<Any> {
+                      @RequestParam(value = "currency") currency: String): ResponseEntity<String> {
         val issueAmount = Amount(amount.toLong() * 100, Currency.getInstance(currency))
 
         return try {

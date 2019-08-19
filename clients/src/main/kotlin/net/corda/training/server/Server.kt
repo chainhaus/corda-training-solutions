@@ -1,4 +1,4 @@
-package com.example.server
+package net.corda.training.server
 
 import net.corda.client.jackson.JacksonSupport
 import org.springframework.beans.factory.annotation.Autowired
