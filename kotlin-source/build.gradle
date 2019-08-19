@@ -59,10 +59,9 @@ dependencies {
     cordaCompile "$corda_release_distribution:corda-finance-workflows:$corda_release_version"
     cordaCompile "$corda_release_distribution:corda-jackson:$corda_release_version"
     cordaCompile "$corda_release_distribution:corda-rpc:$corda_release_version"
-    cordaCompile "$corda_release_distribution:corda-node-api:$corda_release_version"
-    cordaCompile "$corda_release_distribution:corda-webserver-impl:$corda_release_version"
+
     cordaRuntime "$corda_release_distribution:corda:$corda_release_version"
-    cordaRuntime "$corda_release_distribution:corda-webserver:$corda_release_version"
+
 
     testCompile "$corda_release_distribution:corda-test-utils:$corda_release_version"
     testCompile "$corda_release_distribution:corda-node-driver:$corda_release_version"
@@ -73,6 +72,8 @@ dependencies {
     compile("org.graphstream:gs-ui:1.3") {
         exclude group: "bouncycastle"
     }
+
+    cordaRuntime "org.apache.logging.log4j:log4j-slf4j-impl:$log4j_version"
 
     // CorDapp dependencies
     // Specify your cordapp's dependencies below, including dependent cordapps
@@ -91,8 +92,6 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
 }
 
 task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
-    delete "./build/nodes"
-    directory "./build/nodes"
 
     signing {
         enabled false
