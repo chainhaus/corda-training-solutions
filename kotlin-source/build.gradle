@@ -119,7 +119,6 @@ task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
     node {
         name "O=ParticipantA,L=London,C=GB"
         p2pPort 10007
-        webPort 10009
         rpcSettings {
             useSsl false
             standAloneBroker false
@@ -130,7 +129,6 @@ task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
     node {
         name "O=ParticipantB,L=New York,C=US"
         p2pPort 10010
-        webPort 10012
         rpcSettings {
             useSsl false
             standAloneBroker false
@@ -141,7 +139,6 @@ task deployNodes(type: net.corda.plugins.Cordform, dependsOn: ['jar']) {
     node {
         name "O=ParticipantC,L=Paris,C=FR"
         p2pPort 10013
-        webPort 10015
         rpcSettings {
             useSsl false
             standAloneBroker false
