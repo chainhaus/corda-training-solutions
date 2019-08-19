@@ -6,12 +6,19 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/clients/corda-training-solutions.clients.iml" filepath="$PROJECT_DIR$/.idea/modules/clients/corda-training-solutions.clients.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/clients/corda-training-solutions.clients.main.iml" filepath="$PROJECT_DIR$/.idea/modules/clients/corda-training-solutions.clients.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/clients/corda-training-solutions.clients.test.iml" filepath="$PROJECT_DIR$/.idea/modules/clients/corda-training-solutions.clients.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/contracts-kotlin/corda-training-solutions.contracts-kotlin.iml" filepath="$PROJECT_DIR$/.idea/modules/contracts-kotlin/corda-training-solutions.contracts-kotlin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/contracts-kotlin/corda-training-solutions.contracts-kotlin.main.iml" filepath="$PROJECT_DIR$/.idea/modules/contracts-kotlin/corda-training-solutions.contracts-kotlin.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/contracts-kotlin/corda-training-solutions.contracts-kotlin.test.iml" filepath="$PROJECT_DIR$/.idea/modules/contracts-kotlin/corda-training-solutions.contracts-kotlin.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/java-source/corda-training-solutions.java-source.iml" filepath="$PROJECT_DIR$/.idea/modules/java-source/corda-training-solutions.java-source.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/java-source/corda-training-solutions.java-source.main.iml" filepath="$PROJECT_DIR$/.idea/modules/java-source/corda-training-solutions.java-source.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/java-source/corda-training-solutions.java-source.test.iml" filepath="$PROJECT_DIR$/.idea/modules/java-source/corda-training-solutions.java-source.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/kotlin-source/corda-training-solutions.kotlin-source.iml" filepath="$PROJECT_DIR$/.idea/modules/kotlin-source/corda-training-solutions.kotlin-source.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/kotlin-source/corda-training-solutions.kotlin-source.main.iml" filepath="$PROJECT_DIR$/.idea/modules/kotlin-source/corda-training-solutions.kotlin-source.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/kotlin-source/corda-training-solutions.kotlin-source.test.iml" filepath="$PROJECT_DIR$/.idea/modules/kotlin-source/corda-training-solutions.kotlin-source.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/workflows-kotlin/corda-training-solutions.workflows-kotlin.iml" filepath="$PROJECT_DIR$/.idea/modules/workflows-kotlin/corda-training-solutions.workflows-kotlin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/workflows-kotlin/corda-training-solutions.workflows-kotlin.integrationTest.iml" filepath="$PROJECT_DIR$/.idea/modules/workflows-kotlin/corda-training-solutions.workflows-kotlin.integrationTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/workflows-kotlin/corda-training-solutions.workflows-kotlin.main.iml" filepath="$PROJECT_DIR$/.idea/modules/workflows-kotlin/corda-training-solutions.workflows-kotlin.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/workflows-kotlin/corda-training-solutions.workflows-kotlin.test.iml" filepath="$PROJECT_DIR$/.idea/modules/workflows-kotlin/corda-training-solutions.workflows-kotlin.test.iml" />
     </modules>
   </component>
 </project>
