@@ -2,6 +2,12 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel>
+      <module name="com.template.corda-training-solutions.clients.main" target="1.8" />
+      <module name="com.template.corda-training-solutions.clients.test" target="1.8" />
+      <module name="com.template.corda-training-solutions.java-source.main" target="1.8" />
+      <module name="com.template.corda-training-solutions.java-source.test" target="1.8" />
+      <module name="com.template.corda-training-solutions.kotlin-source.main" target="1.8" />
+      <module name="com.template.corda-training-solutions.kotlin-source.test" target="1.8" />
       <module name="com.template.java-source.main" target="1.8" />
       <module name="com.template.java-source.test" target="1.8" />
       <module name="com.template.kotlin-source.main" target="1.8" />
