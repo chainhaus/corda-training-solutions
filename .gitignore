@@ -66,3 +66,9 @@ crashlytics-build.properties
 
 # docs related
 docs/virtualenv/
+
+.idea/modules
+.idea/vcs.xml
+.idea/misc.xml
+.idea/gradle.xml
+.idea/modules.xml
