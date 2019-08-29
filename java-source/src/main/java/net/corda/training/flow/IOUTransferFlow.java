@@ -18,7 +18,7 @@ import net.corda.core.transactions.TransactionBuilder;
 import net.corda.training.contract.IOUContract;
 import net.corda.training.state.IOUState;
 
-import javax.validation.constraints.NotNull;
+
 import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,15 +34,15 @@ import static net.corda.core.contracts.ContractsDSL.requireThat;
  * Notarisation (if required) and commitment to the ledger is handled by the [FinalityFlow].
  * The flow returns the [SignedTransaction] that was committed to the ledger.
  */
-public class IOUTransferFlow{
+public class IOUTransferFlow {
 
     @InitiatingFlow
     @StartableByRPC
-    public static class InitiatorFlow extends FlowLogic<SignedTransaction> {
+    public static class IOUTransferFlowInitiator extends FlowLogic<SignedTransaction> {
         private final UniqueIdentifier stateLinearId;
         private final Party newLender;
 
-        public InitiatorFlow(UniqueIdentifier stateLinearId, Party newLender) {
+        public IOUTransferFlowInitiator(UniqueIdentifier stateLinearId, Party newLender) {
             this.stateLinearId = stateLinearId;
             this.newLender = newLender;
         }
@@ -116,13 +116,13 @@ public class IOUTransferFlow{
      * This is the flow which signs IOU settlements.
      * The signing is handled by the [SignTransactionFlow].
      */
-    @InitiatedBy(IOUTransferFlow.InitiatorFlow.class)
-    public static class Responder extends FlowLogic<SignedTransaction> {
+    @InitiatedBy(IOUTransferFlowInitiator.class)
+    public static class IOUTransferFlowResponder extends FlowLogic<SignedTransaction> {
 
         private final FlowSession otherPartyFlow;
         private SecureHash txWeJustSignedId;
 
-        public Responder(FlowSession otherPartyFlow) {
+        public IOUTransferFlowResponder(FlowSession otherPartyFlow) {
             this.otherPartyFlow = otherPartyFlow;
         }
 
@@ -135,7 +135,6 @@ public class IOUTransferFlow{
                 }
 
                 @Override
-                @NotNull
                 protected void checkTransaction(SignedTransaction stx) {
                     requireThat(require -> {
                         ContractState output = stx.getTx().getOutputs().get(0).getData();

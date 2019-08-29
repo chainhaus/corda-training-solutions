@@ -13,7 +13,7 @@ import net.corda.finance.contracts.asset.Cash;
 import net.corda.training.state.IOUState;
 
 import javax.swing.plaf.nimbus.State;
-import javax.validation.constraints.NotNull;
+
 import java.lang.reflect.Array;
 import java.security.PublicKey;
 import java.util.*;

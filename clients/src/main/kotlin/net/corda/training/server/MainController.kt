@@ -12,9 +12,9 @@ import net.corda.core.messaging.vaultQueryBy
 import net.corda.core.node.NodeInfo
 import net.corda.finance.contracts.asset.Cash
 import net.corda.finance.workflows.getCashBalances
-import net.corda.training.flow.IOUIssueFlow
-import net.corda.training.flow.IOUSettleFlow
-import net.corda.training.flow.IOUTransferFlow
+import net.corda.training.flow.IOUIssueFlow.IOUIssueFlowInitiator
+import net.corda.training.flow.IOUTransferFlow.IOUTransferFlowInitiator
+import net.corda.training.flow.IOUSettleFlow.IOUSettleFlowInitiator
 import net.corda.training.flow.SelfIssueCashFlow
 import net.corda.training.state.IOUState
 import org.bouncycastle.asn1.x500.X500Name
@@ -35,7 +35,7 @@ val SERVICE_NAMES = listOf("Notary", "Network Map Service")
  */
 
 @RestController
-@RequestMapping("/api/iou/") // The paths for GET and POST requests are relative to this base path.
+@RequestMapping("/api/iou/") // The paths for requests are relative to this base path.
 class MainController(rpc: NodeRPCConnection) {
 
     private val proxy = rpc.proxy
@@ -101,7 +101,7 @@ class MainController(rpc: NodeRPCConnection) {
     /**
      * Initiates a flow to agree an IOU between two parties.
      * Example request:
-     * curl -X PUT 'http://localhost:10007/api/iou/issue-iou?amount=99&currency=GBP&party=O=ParticipantC,L=New%20York,C=US
+     * curl -X PUT 'http://localhost:10007/api/iou/issue-iou?amount=99&currency=GBP&party=O=ParticipantC,L=New%20York,C=US'
      */
     @PutMapping(value = [ "issue-iou" ], produces = [ TEXT_PLAIN_VALUE ])
     fun issueIOU(@RequestParam(value = "amount") amount: Int,
@@ -114,7 +114,7 @@ class MainController(rpc: NodeRPCConnection) {
         try {
             val state = IOUState(Amount(amount.toLong() * 100, Currency.getInstance(currency)), lender, me)
             // Start the IOUIssueFlow. We block and waits for the flow to return.
-            val result = proxy.startTrackedFlow(::IOUIssueFlow, state).returnValue.get()
+            val result = proxy.startTrackedFlow(::IOUIssueFlowInitiator, state).returnValue.get()
             // Return the response.
             return ResponseEntity
                     .status(HttpStatus.CREATED)
@@ -131,27 +131,29 @@ class MainController(rpc: NodeRPCConnection) {
 
     /**
      * Transfers an IOU specified by [linearId] to a new party.
+     * Example request:
+     * curl -X GET 'http://localhost:10007/api/iou/transfer-iou?id=705dc5c5-44da-4006-a55b-e29f78955089&party=O=ParticipantC,L=New%20York,C=US'
      */
-    @GetMapping(value = [ "transfer-iou" ])
+    @GetMapping(value = [ "transfer-iou" ], produces = [ TEXT_PLAIN_VALUE ])
     fun transferIOU(@RequestParam(value = "id") id: String,
                     @RequestParam(value = "party") party: String): ResponseEntity<String> {
         val linearId = UniqueIdentifier.fromString(id)
         val newLender = proxy.wellKnownPartyFromX500Name(CordaX500Name.parse(party)) ?: throw IllegalArgumentException("Unknown party name.")
         return try {
-            proxy.startFlow(::IOUTransferFlow, linearId, newLender).returnValue.get()
+            proxy.startFlow(::IOUTransferFlowInitiator, linearId, newLender).returnValue.get()
             ResponseEntity.status(HttpStatus.CREATED).body("IOU $id transferred to $party.")
 
         } catch (e: Exception) {
-             ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.message)
+            ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.message)
         }
     }
 
     /**
      * Settles an IOU. Requires cash in the right currency to be able to settle.
      * Example request:
-     * curl -X PUT 'http://localhost:10007/api/iou/issue-iou?amount=99&currency=GBP&party=O=ParticipantC,L=New%20York,C=US
+     * curl -X GET 'http://localhost:10007/api/iou/settle-iou?id=705dc5c5-44da-4006-a55b-e29f78955089&amount=98&currency=USD'
      */
-    @GetMapping(value = [ "settle-iou" ])
+    @GetMapping(value = [ "settle-iou" ], produces = [ TEXT_PLAIN_VALUE ])
     fun settleIOU(@RequestParam(value = "id") id: String,
                   @RequestParam(value = "amount") amount: Int,
                   @RequestParam(value = "currency") currency: String): ResponseEntity<String> {
@@ -159,7 +161,7 @@ class MainController(rpc: NodeRPCConnection) {
         val settleAmount = Amount(amount.toLong() * 100, Currency.getInstance(currency))
 
         return try {
-            proxy.startFlow(::IOUSettleFlow, linearId, settleAmount).returnValue.get()
+            proxy.startFlow(::IOUSettleFlowInitiator, linearId, settleAmount).returnValue.get()
             ResponseEntity.status(HttpStatus.CREATED).body("$amount $currency paid off on IOU id $id.")
 
         } catch (e: Exception) {
@@ -169,8 +171,10 @@ class MainController(rpc: NodeRPCConnection) {
 
     /**
      * Helper end-point to issue some cash to ourselves.
+     * Example request:
+     * curl -X GET 'http://localhost:10007/api/iou/self-issue-cash?amount=100&currency=USD'
      */
-    @GetMapping(value = [ "self-issue-cash" ])
+    @GetMapping(value = [ "self-issue-cash" ], produces = [ TEXT_PLAIN_VALUE ])
     fun selfIssueCash(@RequestParam(value = "amount") amount: Int,
                       @RequestParam(value = "currency") currency: String): ResponseEntity<String> {
         val issueAmount = Amount(amount.toLong() * 100, Currency.getInstance(currency))

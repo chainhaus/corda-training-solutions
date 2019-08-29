@@ -2,11 +2,9 @@ package net.corda.training.flow;
 
 import net.corda.core.contracts.Command;
 import net.corda.core.contracts.TransactionVerificationException;
-import net.corda.core.flows.FlowLogic;
 import net.corda.core.identity.CordaX500Name;
 import net.corda.core.transactions.SignedTransaction;
 import net.corda.finance.*;
-import net.corda.core.node.NodeInfo;
 import net.corda.testing.node.*;
 import net.corda.core.identity.Party;
 import net.corda.core.crypto.SecureHash;
@@ -26,8 +24,6 @@ import org.junit.rules.ExpectedException;
 
 import static org.junit.Assert.*;
 import static org.hamcrest.core.IsInstanceOf.*;
-
-import java.security.PublicKey;
 
 /**
  * Practical exercise instructions Flows part 1.
@@ -56,7 +52,7 @@ public class IOUIssueFlowTests {
         startedNodes.add(b);
 
         // For real nodes this happens automatically, but we have to manually register the flow for tests
-        startedNodes.forEach(el -> el.registerInitiatedFlow(IOUIssueFlow.ResponderFlow.class));
+        startedNodes.forEach(el -> el.registerInitiatedFlow(IOUIssueFlow.IOUIssueFlowResponder.class));
         mockNetwork.runNetwork();
     }
 
@@ -91,7 +87,7 @@ public class IOUIssueFlowTests {
         Party borrower = b.getInfo().getLegalIdentitiesAndCerts().get(0).getParty();
 
         IOUState iou = new IOUState(Currencies.POUNDS(10), lender, borrower);
-        IOUIssueFlow.InitiatorFlow flow = new IOUIssueFlow.InitiatorFlow(iou);
+        IOUIssueFlow.IOUIssueFlowInitiator flow = new IOUIssueFlow.IOUIssueFlowInitiator(iou);
 
         Future<SignedTransaction> future = a.startFlow(flow);
         mockNetwork.runNetwork();
@@ -132,7 +128,7 @@ public class IOUIssueFlowTests {
         Party borrower = b.getInfo().getLegalIdentitiesAndCerts().get(0).getParty();
 
         IOUState zeroIou = new IOUState(Currencies.POUNDS(0), lender, borrower);
-        Future<SignedTransaction> futureOne = a.startFlow(new IOUIssueFlow.InitiatorFlow(zeroIou));
+        Future<SignedTransaction> futureOne = a.startFlow(new IOUIssueFlow.IOUIssueFlowInitiator(zeroIou));
         mockNetwork.runNetwork();
 
         exception.expectCause(instanceOf(TransactionVerificationException.class));
@@ -141,14 +137,14 @@ public class IOUIssueFlowTests {
 
         // Check that an IOU with the same participants fails.
         IOUState borrowerIsLenderIou = new IOUState(Currencies.POUNDS(10), lender, lender);
-        Future<SignedTransaction> futureTwo = a.startFlow(new IOUIssueFlow.InitiatorFlow(borrowerIsLenderIou));
+        Future<SignedTransaction> futureTwo = a.startFlow(new IOUIssueFlow.IOUIssueFlowInitiator(borrowerIsLenderIou));
         mockNetwork.runNetwork();
         exception.expectCause(instanceOf(TransactionVerificationException.class));
         futureTwo.get();
 
         // Check a good IOU passes.
         IOUState iou = new IOUState(Currencies.POUNDS(10), lender, borrower);
-        Future<SignedTransaction> futureThree = a.startFlow(new IOUIssueFlow.InitiatorFlow(iou));
+        Future<SignedTransaction> futureThree = a.startFlow(new IOUIssueFlow.IOUIssueFlowInitiator(iou));
         mockNetwork.runNetwork();
         futureThree.get();
     }
@@ -182,7 +178,7 @@ public class IOUIssueFlowTests {
         Party lender = a.getInfo().getLegalIdentitiesAndCerts().get(0).getParty();
         Party borrower = b.getInfo().getLegalIdentitiesAndCerts().get(0).getParty();
         IOUState iou = new IOUState(Currencies.POUNDS(10), lender, borrower);
-        IOUIssueFlow.InitiatorFlow flow = new IOUIssueFlow.InitiatorFlow(iou);
+        IOUIssueFlow.IOUIssueFlowInitiator flow = new IOUIssueFlow.IOUIssueFlowInitiator(iou);
 
         Future<SignedTransaction> future = a.startFlow(flow);
         mockNetwork.runNetwork();
@@ -208,7 +204,7 @@ public class IOUIssueFlowTests {
         Party lender = a.getInfo().getLegalIdentitiesAndCerts().get(0).getParty();
         Party borrower = b.getInfo().getLegalIdentitiesAndCerts().get(0).getParty();
         IOUState iou = new IOUState(Currencies.POUNDS(10), lender, borrower);
-        IOUIssueFlow.InitiatorFlow flow = new IOUIssueFlow.InitiatorFlow(iou);
+        IOUIssueFlow.IOUIssueFlowInitiator flow = new IOUIssueFlow.IOUIssueFlowInitiator(iou);
 
         Future<SignedTransaction> future = a.startFlow(flow);
         mockNetwork.runNetwork();

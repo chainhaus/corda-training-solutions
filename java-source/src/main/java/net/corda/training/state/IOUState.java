@@ -10,7 +10,7 @@ import net.corda.core.serialization.ConstructorForDeserialization;
 import net.corda.core.serialization.CordaSerializable;
 import net.corda.training.contract.IOUContract;
 
-import javax.servlet.http.Part;
+
 
 /**
  * The IOU State object, with the following properties:

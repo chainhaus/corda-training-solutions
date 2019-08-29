@@ -2,20 +2,14 @@ package net.corda.training.flow;
 
 import net.corda.core.concurrent.CordaFuture;
 import net.corda.core.contracts.Amount;
-import net.corda.core.contracts.Command;
-import net.corda.core.contracts.CommandAndState;
 import net.corda.core.contracts.CommandWithParties;
-import net.corda.core.flows.FlowSession;
 import net.corda.core.identity.CordaX500Name;
-import net.corda.core.identity.Party;
-import net.corda.finance.schemas.CashSchemaV1;
 import net.corda.core.transactions.LedgerTransaction;
 import net.corda.core.transactions.SignedTransaction;
 import net.corda.finance.Currencies;
 import net.corda.finance.contracts.asset.Cash;
 import net.corda.testing.node.*;
 import net.corda.training.contract.IOUContract;
-import net.corda.training.contract.IOUIssueTests;
 import net.corda.training.state.IOUState;
 import org.junit.After;
 import org.junit.Before;
@@ -23,7 +17,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import javax.annotation.Signed;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Currency;
@@ -32,10 +25,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
-import static net.corda.testing.driver.Driver.driver;
 import static net.corda.testing.node.NodeTestUtils.ledger;
-import static net.corda.training.TestUtils.ALICE;
-import static net.corda.training.TestUtils.BOB;
 
 /**
  * Practical exercise instructions Flows part 3.
@@ -68,7 +58,7 @@ public class IOUSettleFlowTests{
         startedNodes.add(c);
 
         // For real nodes this happens automatically, but we have to manually register the flow for tests
-        startedNodes.forEach(el -> el.registerInitiatedFlow(IOUSettleFlow.Responder.class));
+        startedNodes.forEach(el -> el.registerInitiatedFlow(IOUSettleFlow.IOUSettleFlowResponder.class));
         mockNetwork.runNetwork();
     }
 
@@ -81,7 +71,7 @@ public class IOUSettleFlowTests{
     public final ExpectedException exception = ExpectedException.none();
 
     private SignedTransaction issueIOU(IOUState iouState) throws InterruptedException, ExecutionException {
-        IOUIssueFlow.InitiatorFlow flow = new IOUIssueFlow.InitiatorFlow(iouState);
+        IOUIssueFlow.IOUIssueFlowInitiator flow = new IOUIssueFlow.IOUIssueFlowInitiator(iouState);
         CordaFuture future = a.startFlow(flow);
         mockNetwork.runNetwork();
         return (SignedTransaction) future.get();
@@ -114,7 +104,7 @@ public class IOUSettleFlowTests{
         SignedTransaction stx = issueIOU(new IOUState(Currencies.POUNDS(10), b.getInfo().getLegalIdentities().get(0), a.getInfo().getLegalIdentities().get(0)));
         issueCash(Currencies.POUNDS(5));
         IOUState inputIOU = stx.getTx().outputsOfType(IOUState.class).get(0);
-        IOUSettleFlow.InitiatorFlow flow = new IOUSettleFlow.InitiatorFlow(inputIOU.getLinearId(), Currencies.POUNDS(5));
+        IOUSettleFlow.IOUSettleFlowInitiator flow = new IOUSettleFlow.IOUSettleFlowInitiator(inputIOU.getLinearId(), Currencies.POUNDS(5));
         Future<SignedTransaction> futureSettleResult = a.startFlow(flow);
 
         mockNetwork.runNetwork();
@@ -177,7 +167,7 @@ public class IOUSettleFlowTests{
         SignedTransaction stx = issueIOU(new IOUState(Currencies.POUNDS(10), b.getInfo().getLegalIdentities().get(0), a.getInfo().getLegalIdentities().get(0)));
         issueCash(Currencies.POUNDS(5));
         IOUState inputIOU = stx.getTx().outputsOfType(IOUState.class).get(0);
-        IOUSettleFlow.InitiatorFlow flow = new IOUSettleFlow.InitiatorFlow(inputIOU.getLinearId(), Currencies.POUNDS(5));
+        IOUSettleFlow.IOUSettleFlowInitiator flow = new IOUSettleFlow.IOUSettleFlowInitiator(inputIOU.getLinearId(), Currencies.POUNDS(5));
         Future<SignedTransaction> futureSettleResult = b.startFlow(flow);
 
         try {
@@ -201,7 +191,7 @@ public class IOUSettleFlowTests{
         SignedTransaction stx = issueIOU(new IOUState(Currencies.POUNDS(10), b.getInfo().getLegalIdentities().get(0), a.getInfo().getLegalIdentities().get(0)));
         issueCash(Currencies.POUNDS(5));
         IOUState inputIOU = stx.getTx().outputsOfType(IOUState.class).get(0);
-        IOUSettleFlow.InitiatorFlow flow = new IOUSettleFlow.InitiatorFlow(inputIOU.getLinearId(), Currencies.POUNDS(5));
+        IOUSettleFlow.IOUSettleFlowInitiator flow = new IOUSettleFlow.IOUSettleFlowInitiator(inputIOU.getLinearId(), Currencies.POUNDS(5));
         Future<SignedTransaction> futureSettleResult = a.startFlow(flow);
 
         try {
@@ -222,7 +212,7 @@ public class IOUSettleFlowTests{
     public void borrowerMustHaveEnoughCashInRightCurrency() throws Exception {
         SignedTransaction stx = issueIOU(new IOUState(Currencies.POUNDS(10), b.getInfo().getLegalIdentities().get(0), a.getInfo().getLegalIdentities().get(0)));
         IOUState inputIOU = stx.getTx().outputsOfType(IOUState.class).get(0);
-        IOUSettleFlow.InitiatorFlow flow = new IOUSettleFlow.InitiatorFlow(inputIOU.getLinearId(), Currencies.POUNDS(5));
+        IOUSettleFlow.IOUSettleFlowInitiator flow = new IOUSettleFlow.IOUSettleFlowInitiator(inputIOU.getLinearId(), Currencies.POUNDS(5));
         Future<SignedTransaction> futureSettleResult = a.startFlow(flow);
 
         try {
@@ -243,7 +233,7 @@ public class IOUSettleFlowTests{
         SignedTransaction stx = issueIOU(new IOUState(Currencies.POUNDS(10), b.getInfo().getLegalIdentities().get(0), a.getInfo().getLegalIdentities().get(0)));
         issueCash(Currencies.POUNDS(5));
         IOUState inputIOU = stx.getTx().outputsOfType(IOUState.class).get(0);
-        IOUSettleFlow.InitiatorFlow flow = new IOUSettleFlow.InitiatorFlow(inputIOU.getLinearId(), Currencies.POUNDS(5));
+        IOUSettleFlow.IOUSettleFlowInitiator flow = new IOUSettleFlow.IOUSettleFlowInitiator(inputIOU.getLinearId(), Currencies.POUNDS(5));
         Future<SignedTransaction> futureSettleResult = a.startFlow(flow);
 
         try {
@@ -264,7 +254,7 @@ public class IOUSettleFlowTests{
         SignedTransaction stx = issueIOU(new IOUState(Currencies.POUNDS(10), b.getInfo().getLegalIdentities().get(0), a.getInfo().getLegalIdentities().get(0)));
         issueCash(Currencies.POUNDS(5));
         IOUState inputIOU = stx.getTx().outputsOfType(IOUState.class).get(0);
-        IOUSettleFlow.InitiatorFlow flow = new IOUSettleFlow.InitiatorFlow(inputIOU.getLinearId(), Currencies.POUNDS(5));
+        IOUSettleFlow.IOUSettleFlowInitiator flow = new IOUSettleFlow.IOUSettleFlowInitiator(inputIOU.getLinearId(), Currencies.POUNDS(5));
         Future<SignedTransaction> futureSettleResult = a.startFlow(flow);
 
         try {

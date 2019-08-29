@@ -29,9 +29,9 @@ public class IOUIssueFlow {
 
     @InitiatingFlow(version = 2)
     @StartableByRPC
-    public static class InitiatorFlow extends FlowLogic<SignedTransaction> {
+    public static class IOUIssueFlowInitiator extends FlowLogic<SignedTransaction> {
         private final IOUState state;
-        public InitiatorFlow(IOUState state) {
+        public IOUIssueFlowInitiator(IOUState state) {
             this.state = state;
         }
 
@@ -84,13 +84,13 @@ public class IOUIssueFlow {
      * This is the flow which signs IOU issuances.
      * The signing is handled by the [SignTransactionFlow].
      */
-    @InitiatedBy(IOUIssueFlow.InitiatorFlow.class)
-    public static class ResponderFlow extends FlowLogic<SignedTransaction> {
+    @InitiatedBy(IOUIssueFlowInitiator.class)
+    public static class IOUIssueFlowResponder extends FlowLogic<SignedTransaction> {
 
         private final FlowSession flowSession;
         private SecureHash txWeJustSigned;
 
-        public ResponderFlow(FlowSession flowSession){
+        public IOUIssueFlowResponder(FlowSession flowSession){
             this.flowSession = flowSession;
         }
 

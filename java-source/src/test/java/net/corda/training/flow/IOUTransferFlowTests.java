@@ -1,7 +1,6 @@
 package net.corda.training.flow;
 
 import net.corda.core.concurrent.CordaFuture;
-import net.corda.core.contracts.Amount;
 import net.corda.core.contracts.Command;
 import net.corda.core.contracts.StateRef;
 import net.corda.core.identity.CordaX500Name;
@@ -44,7 +43,7 @@ public class IOUTransferFlowTests {
         startedNodes.add(c);
 
         // For real nodes this happens automatically, but we have to manually register the flow for tests
-        startedNodes.forEach(el -> el.registerInitiatedFlow(IOUTransferFlow.Responder.class));
+        startedNodes.forEach(el -> el.registerInitiatedFlow(IOUTransferFlow.IOUTransferFlowResponder.class));
         mockNetwork.runNetwork();
     }
 
@@ -57,7 +56,7 @@ public class IOUTransferFlowTests {
     public final ExpectedException exception = ExpectedException.none();
 
     private SignedTransaction issueIOU(IOUState iouState) throws InterruptedException, ExecutionException {
-        IOUIssueFlow.InitiatorFlow flow = new IOUIssueFlow.InitiatorFlow(iouState);
+        IOUIssueFlow.IOUIssueFlowInitiator flow = new IOUIssueFlow.IOUIssueFlowInitiator(iouState);
         CordaFuture future = a.startFlow(flow);
         mockNetwork.runNetwork();
         return (SignedTransaction) future.get();
@@ -87,7 +86,7 @@ public class IOUTransferFlowTests {
         Party borrower = b.getInfo().getLegalIdentitiesAndCerts().get(0).getParty();
         SignedTransaction stx = issueIOU(new IOUState(Currencies.DOLLARS(10), lender, borrower));
         IOUState inputIou = (IOUState) stx.getTx().getOutputs().get(0).getData();
-        IOUTransferFlow.InitiatorFlow flow = new IOUTransferFlow.InitiatorFlow(inputIou.getLinearId(), c.getInfo().getLegalIdentities().get(0));
+        IOUTransferFlow.IOUTransferFlowInitiator flow = new IOUTransferFlow.IOUTransferFlowInitiator(inputIou.getLinearId(), c.getInfo().getLegalIdentities().get(0));
         Future<SignedTransaction> future = a.startFlow(flow);
 
         mockNetwork.runNetwork();
@@ -123,7 +122,7 @@ public class IOUTransferFlowTests {
         Party borrower = b.getInfo().getLegalIdentitiesAndCerts().get(0).getParty();
         SignedTransaction stx = issueIOU(new IOUState(Currencies.DOLLARS(10), lender, borrower));
         IOUState inputIou = (IOUState) stx.getTx().getOutputs().get(0).getData();
-        IOUTransferFlow.InitiatorFlow flow = new IOUTransferFlow.InitiatorFlow(inputIou.getLinearId(), c.getInfo().component2().get(0).getParty());
+        IOUTransferFlow.IOUTransferFlowInitiator flow = new IOUTransferFlow.IOUTransferFlowInitiator(inputIou.getLinearId(), c.getInfo().component2().get(0).getParty());
         Future<SignedTransaction> future = b.startFlow(flow);
         try {
             mockNetwork.runNetwork();
@@ -144,7 +143,7 @@ public class IOUTransferFlowTests {
         Party borrower = b.getInfo().getLegalIdentitiesAndCerts().get(0).getParty();
         SignedTransaction stx = issueIOU(new IOUState(Currencies.DOLLARS(10), lender, borrower));
         IOUState inputIou = (IOUState) stx.getTx().getOutputs().get(0).getData();
-        IOUTransferFlow.InitiatorFlow flow = new IOUTransferFlow.InitiatorFlow(inputIou.getLinearId(), c.getInfo().component2().get(0).getParty());
+        IOUTransferFlow.IOUTransferFlowInitiator flow = new IOUTransferFlow.IOUTransferFlowInitiator(inputIou.getLinearId(), c.getInfo().component2().get(0).getParty());
         Future<SignedTransaction> future = a.startFlow(flow);
         try {
             mockNetwork.runNetwork();
@@ -167,7 +166,7 @@ public class IOUTransferFlowTests {
         Party borrower = b.getInfo().getLegalIdentitiesAndCerts().get(0).getParty();
         SignedTransaction stx = issueIOU(new IOUState(Currencies.DOLLARS(10), lender, borrower));
         IOUState inputIou = (IOUState) stx.getTx().getOutputs().get(0).getData();
-        IOUTransferFlow.InitiatorFlow flow = new IOUTransferFlow.InitiatorFlow(inputIou.getLinearId(), lender);
+        IOUTransferFlow.IOUTransferFlowInitiator flow = new IOUTransferFlow.IOUTransferFlowInitiator(inputIou.getLinearId(), lender);
         Future<SignedTransaction> future = a.startFlow(flow);
         try {
             mockNetwork.runNetwork();
@@ -189,7 +188,7 @@ public class IOUTransferFlowTests {
         Party borrower = b.getInfo().getLegalIdentitiesAndCerts().get(0).getParty();
         SignedTransaction stx = issueIOU(new IOUState(Currencies.DOLLARS(10), lender, borrower));
         IOUState inputIou = (IOUState) stx.getTx().getOutputs().get(0).getData();
-        IOUTransferFlow.InitiatorFlow flow = new IOUTransferFlow.InitiatorFlow(inputIou.getLinearId(), c.getInfo().component2().get(0).getParty());
+        IOUTransferFlow.IOUTransferFlowInitiator flow = new IOUTransferFlow.IOUTransferFlowInitiator(inputIou.getLinearId(), c.getInfo().component2().get(0).getParty());
         Future<SignedTransaction> future = a.startFlow(flow);
         try {
             mockNetwork.runNetwork();

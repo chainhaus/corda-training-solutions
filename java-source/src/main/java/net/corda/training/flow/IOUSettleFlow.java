@@ -42,12 +42,12 @@ public class IOUSettleFlow {
      */
     @InitiatingFlow
     @StartableByRPC
-    public static class InitiatorFlow extends FlowLogic<SignedTransaction> {
+    public static class IOUSettleFlowInitiator extends FlowLogic<SignedTransaction> {
 
         private final UniqueIdentifier stateLinearId;
         private final Amount<Currency> amount;
 
-        public InitiatorFlow(UniqueIdentifier stateLinearId, Amount<Currency> amount) {
+        public IOUSettleFlowInitiator(UniqueIdentifier stateLinearId, Amount<Currency> amount) {
             this.stateLinearId = stateLinearId;
             this.amount = amount;
         }
@@ -132,13 +132,13 @@ public class IOUSettleFlow {
      * This is the flow which signs IOU settlements.
      * The signing is handled by the [SignTransactionFlow].
      */
-    @InitiatedBy(IOUSettleFlow.InitiatorFlow.class)
-    public static class Responder extends FlowLogic<SignedTransaction> {
+    @InitiatedBy(IOUSettleFlowInitiator.class)
+    public static class IOUSettleFlowResponder extends FlowLogic<SignedTransaction> {
 
         private final FlowSession otherPartyFlow;
         private SecureHash txWeJustSignedId;
 
-        public Responder(FlowSession otherPartyFlow) {
+        public IOUSettleFlowResponder(FlowSession otherPartyFlow) {
             this.otherPartyFlow = otherPartyFlow;
         }
 
@@ -172,35 +172,6 @@ public class IOUSettleFlow {
             return subFlow(new ReceiveFinalityFlow(otherPartyFlow, txWeJustSignedId));
 
         }
-    }
-
-    /**
-     * Self issues the calling node an amount of cash in the desired currency.
-     * Only used for demo/sample/training purposes!
-     */
-
-    @InitiatingFlow
-    @StartableByRPC
-    public static class SelfIssueCashFlow extends FlowLogic<Cash.State> {
-
-        Amount<Currency> amount;
-
-        SelfIssueCashFlow(Amount<Currency> amount) {
-            this.amount = amount;
-        }
-
-        @Suspendable
-        @Override
-        public Cash.State call() throws FlowException {
-            // Create the cash issue command.
-            OpaqueBytes issueRef = OpaqueBytes.of(new byte[0]);
-            // Note: ongoing work to support multiple notary identities is still in progress. */
-            Party notary = getServiceHub().getNetworkMapCache().getNotaryIdentities().get(0);
-            // Create the cash issuance transaction.
-            AbstractCashFlow.Result cashIssueTransaction = subFlow(new CashIssueFlow(amount, issueRef, notary));
-            return (Cash.State) cashIssueTransaction.getStx().getTx().getOutput(0);
-        }
-
     }
 
 }

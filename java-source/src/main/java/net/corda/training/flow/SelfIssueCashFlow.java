@@ -13,6 +13,8 @@ import org.intellij.lang.annotations.Flow;
 import javax.annotation.Signed;
 import java.util.Currency;
 
+@InitiatingFlow
+@StartableByRPC
 public class SelfIssueCashFlow extends FlowLogic<Cash.State> {
 
     private Amount<Currency> amount;
